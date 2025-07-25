@@ -25,4 +25,4 @@ services:
     container_name: redis-shieldtag
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "6379"
