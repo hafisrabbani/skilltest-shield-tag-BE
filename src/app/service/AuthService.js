@@ -19,7 +19,8 @@ export default class AuthService {
         if (!isPasswordValid) {
             throw new BadRequestException("Invalid password");
         }
-        client.set(`user:${user.id}`, JSON.stringify({
+        const token = signToken({ id: user.id, email: user.email })
+        await client.set(token, JSON.stringify({
             id: user.id,
             email: user.email
         }), {
@@ -33,7 +34,7 @@ export default class AuthService {
         });
 
         return {
-            token: signToken({ id: user.id, email: user.email }),
+            token,
             user: {
                 id: user.id,
                 email: user.email
@@ -42,7 +43,8 @@ export default class AuthService {
     }
 
     async logout(userId, ctx) {
-        await client.del(`user:${userId}`);
+        const token = ctx?.token;
+        await client.del(token);
         eventEmitter.emit('user.logged_out', {
             user_id: userId,
             ip: ctx?.ip,

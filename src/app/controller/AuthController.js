@@ -32,7 +32,7 @@ export default class AuthController {
     async logout(req, res, next) {
         try {
             const userId = res.locals.user.id;
-            await this.authService.logout(userId);
+            await this.authService.logout(userId, res.locals.context);
             return res.status(200).json(SuccessResponse({
                 msg: "Logout successful"
             }));
